@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       tabItem.innerHTML = `
         <input type="checkbox" ${tab.restricted ? 'disabled' : ''} ${selectedTabIds.has(tab.id) ? 'checked' : ''}>
-        <img class="tab-favicon" src="${tab.favIconUrl || ''}" onerror="this.style.display='none'">
+        <img class="tab-favicon" src="${escapeHtml(tab.favIconUrl || '')}" onerror="this.style.display='none'">
         <div class="tab-info">
           <span class="tab-title">${escapeHtml(tab.title || 'Untitled')}</span>
           <span class="tab-url">${escapeHtml(tab.url || '')}</span>

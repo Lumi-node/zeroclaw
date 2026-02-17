@@ -58,13 +58,13 @@ fi
 category=$(echo "$msg" | python3 -c "import sys,json; print(json.load(sys.stdin).get('category',''))" 2>/dev/null || echo "")
 key_prefix=$(echo "$msg" | python3 -c "import sys,json; print(json.load(sys.stdin).get('key_prefix',''))" 2>/dev/null || echo "")
 
-# Build zeroclaw ingest command
-cmd="zeroclaw ingest --stdin"
-[ -n "$category" ] && cmd="$cmd --category $category"
-[ -n "$key_prefix" ] && cmd="$cmd --key-prefix $key_prefix"
+# Build zeroclaw ingest command (use array to prevent shell injection)
+cmd=(zeroclaw ingest --stdin)
+[ -n "$category" ] && cmd+=(--category "$category")
+[ -n "$key_prefix" ] && cmd+=(--key-prefix "$key_prefix")
 
 # Pipe the JSON to zeroclaw ingest and capture output
-result=$(echo "$msg" | $cmd 2>&1) || {
+result=$(echo "$msg" | "${cmd[@]}" 2>&1) || {
   send_error "zeroclaw ingest failed: $result"
   exit 1
 }
