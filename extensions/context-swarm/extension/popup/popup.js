@@ -37,9 +37,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Load tabs from background
   async function loadTabs() {
-    const response = await browser.runtime.sendMessage({ type: MSG.GET_TABS });
-    tabs = response.tabs;
-    renderTabs();
+    try {
+      const response = await browser.runtime.sendMessage({ type: MSG.GET_TABS });
+      tabs = response.tabs;
+      renderTabs();
+    } catch (err) {
+      tabList.innerHTML = '<div class="progress-item" style="color:#ef4444">Failed to load tabs: ' + escapeHtml(err.message) + '</div>';
+    }
   }
 
   // Render tab list with optional filter
@@ -219,8 +223,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // Copy button handler
   btnCopy.addEventListener('click', () => {
     navigator.clipboard.writeText(extractionBundle).then(() => {
+      copyFeedback.textContent = 'Copied!';
+      copyFeedback.style.color = '#4ade80';
       copyFeedback.classList.remove('hidden');
       setTimeout(() => copyFeedback.classList.add('hidden'), 2000);
+    }).catch(() => {
+      copyFeedback.textContent = 'Copy failed — try downloading instead';
+      copyFeedback.style.color = '#ef4444';
+      copyFeedback.classList.remove('hidden');
+      setTimeout(() => copyFeedback.classList.add('hidden'), 3000);
     });
   });
 
