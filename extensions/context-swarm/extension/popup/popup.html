@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ContextSwarm</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body style="width: 400px; height: 600px; margin: 0; overflow: hidden;">
+  <header>
+    <h1>ContextSwarm</h1>
+    <p class="subtitle">Parallel Context Harvesting</p>
+  </header>
+
+  <!-- Tab Selection View -->
+  <div id="view-tabs" class="view active">
+    <div class="toolbar">
+      <label class="select-all">
+        <input type="checkbox" id="select-all-checkbox">
+        <span>Select All</span>
+      </label>
+      <span id="selected-count" class="count-badge">0 selected</span>
+      <input type="text" id="tab-filter" placeholder="Filter tabs..." class="filter-input">
+    </div>
+    <div id="tab-list" class="tab-list">
+      <!-- Tab items populated by JS -->
+    </div>
+    <div class="actions">
+      <button id="btn-extract" class="btn-primary" disabled>Extract Selected</button>
+    </div>
+  </div>
+
+  <!-- Progress View -->
+  <div id="view-progress" class="view">
+    <div class="progress-header">
+      <h2>Extracting...</h2>
+      <div class="progress-bar-container">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+      <span id="progress-text" class="progress-text">0 / 0</span>
+    </div>
+    <div id="progress-list" class="tab-list">
+      <!-- Progress items populated by JS -->
+    </div>
+  </div>
+
+  <!-- Results View -->
+  <div id="view-results" class="view">
+    <div class="results-header">
+      <h2>Extraction Complete</h2>
+      <div class="results-stats">
+        <span id="results-success" class="stat">0 succeeded</span>
+        <span id="results-failed" class="stat">0 failed</span>
+        <span id="results-tokens" class="stat">~0 tokens</span>
+      </div>
+    </div>
+    <div class="actions results-actions">
+      <button id="btn-copy" class="btn-primary">Copy to Clipboard</button>
+      <button id="btn-download" class="btn-secondary">Download .md</button>
+      <button id="btn-back" class="btn-secondary">Back to Tabs</button>
+    </div>
+    <div id="copy-feedback" class="feedback hidden">Copied!</div>
+
+    <!-- Phase 2: ZeroClaw Integration -->
+    <div id="zeroclaw-section" class="zeroclaw-section hidden">
+      <div class="zeroclaw-header">
+        <span class="zeroclaw-label">ZeroClaw Memory</span>
+        <span id="bridge-status" class="bridge-status"></span>
+      </div>
+      <div class="zeroclaw-controls">
+        <input type="text" id="zc-category" placeholder="Category (default: web)" class="filter-input" value="web">
+        <input type="text" id="zc-key-prefix" placeholder="Key prefix" class="filter-input" value="context-swarm">
+      </div>
+      <button id="btn-store-zeroclaw" class="btn-zeroclaw">Store in ZeroClaw</button>
+      <div id="zeroclaw-feedback" class="feedback hidden"></div>
+    </div>
+  </div>
+
+  <script src="../shared/constants.js" defer></script>
+  <script src="../shared/token-estimator.js" defer></script>
+  <script src="../shared/markdown-bundler.js" defer></script>
+  <script src="popup.js" defer></script>
+</body>
+</html>

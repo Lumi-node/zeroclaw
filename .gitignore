@@ -27,3 +27,9 @@ venv/
 *.key
 *.pem
 credentials.json
+
+# Browser extension artifacts
+extensions/*/node_modules/
+extensions/*/dist/
+extensions/*/web-ext-artifacts/
+extensions/*/*.xpi

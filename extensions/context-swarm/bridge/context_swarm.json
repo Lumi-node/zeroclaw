@@ -1,0 +1,7 @@
+{
+  "name": "context_swarm",
+  "description": "ContextSwarm native messaging bridge for ZeroClaw integration",
+  "path": "BRIDGE_PATH_PLACEHOLDER",
+  "type": "stdio",
+  "allowed_extensions": ["context-swarm@zeroclaw.dev"]
+}
