@@ -2,9 +2,7 @@ var ContextSwarmConstants = {
   MSG: {
     GET_TABS: 'GET_TABS',
     START_EXTRACTION: 'START_EXTRACTION',
-    EXTRACTION_RESULT: 'EXTRACTION_RESULT',
     EXTRACTION_PROGRESS: 'EXTRACTION_PROGRESS',
-    EXTRACTION_COMPLETE: 'EXTRACTION_COMPLETE',
     STORE_ZEROCLAW: 'STORE_ZEROCLAW',
     PING_BRIDGE: 'PING_BRIDGE'
   },
@@ -25,11 +23,9 @@ var ContextSwarmConstants = {
   },
 
   TAB_STATUS: {
-    PENDING: 'pending',
     EXTRACTING: 'extracting',
     DONE: 'done',
-    FAILED: 'failed',
-    SKIPPED: 'skipped'
+    FAILED: 'failed'
   },
 
   EXTRACTION_TIMEOUT_MS: 15000

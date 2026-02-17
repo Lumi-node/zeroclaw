@@ -89,19 +89,8 @@ header .subtitle {
   flex: 1;
   overflow-y: auto;
   padding: 4px 0;
-}
-
-.tab-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.tab-list::-webkit-scrollbar-track {
-  background: #1a1a2e;
-}
-
-.tab-list::-webkit-scrollbar-thumb {
-  background: #0f3460;
-  border-radius: 3px;
+  scrollbar-width: thin;
+  scrollbar-color: #0f3460 #1a1a2e;
 }
 
 .tab-item {

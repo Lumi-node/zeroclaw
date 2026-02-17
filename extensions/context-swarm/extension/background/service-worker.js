@@ -2,7 +2,6 @@ importScripts('../shared/constants.js', '../shared/token-estimator.js', '../shar
 
 const { MSG, TAB_STATUS, EXTRACTION_TIMEOUT_MS, isRestrictedUrl } = ContextSwarmConstants;
 
-let extractionResults = new Map();
 let activePorts = new Set();
 
 async function getAllTabs() {
@@ -70,14 +69,12 @@ async function extractTab(tabId) {
 }
 
 async function startExtraction(tabIds) {
-  extractionResults.clear();
   broadcastProgress(null, 'started', { count: tabIds.length });
 
   const promises = tabIds.map(async (tabId) => {
     broadcastProgress(tabId, TAB_STATUS.EXTRACTING);
     try {
       const result = await extractTab(tabId);
-      extractionResults.set(tabId, result);
       broadcastProgress(tabId, result.status === 'done' ? TAB_STATUS.DONE : TAB_STATUS.FAILED, result);
       return result;
     } catch (err) {
@@ -90,7 +87,6 @@ async function startExtraction(tabIds) {
         extractedAt: new Date().toISOString(),
         fallback: false
       };
-      extractionResults.set(tabId, failResult);
       broadcastProgress(tabId, TAB_STATUS.FAILED, failResult);
       return failResult;
     }
@@ -98,9 +94,8 @@ async function startExtraction(tabIds) {
 
   const results = await Promise.all(promises);
   const bundle = MarkdownBundler.bundleMarkdown(results);
-  broadcastProgress(null, 'complete', { results, bundle });
 
-  return results;
+  return { results, bundle };
 }
 
 function broadcastProgress(tabId, status, result) {
@@ -134,8 +129,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message.type === MSG.START_EXTRACTION) {
-    startExtraction(message.tabIds).then(results => {
-      const bundle = MarkdownBundler.bundleMarkdown(results);
+    startExtraction(message.tabIds).then(({ results, bundle }) => {
       sendResponse({ results, bundle });
     });
     return true;

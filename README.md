@@ -661,6 +661,12 @@ A heartfelt thank you to the communities and institutions that inspire and fuel 
 
 We're building in the open because the best ideas come from everywhere. If you're reading this, you're part of it. Welcome. 🦀❤️
 
+## Browser Extensions
+
+| Extension | Description | Location |
+|-----------|-------------|----------|
+| **ContextSwarm** | Parallel tab extraction to LLM-ready markdown with native messaging bridge for ZeroClaw memory ingest | [`extensions/context-swarm/`](extensions/context-swarm/) |
+
 ## License
 
 MIT — see [LICENSE](LICENSE) and [NOTICE](NOTICE) for contributor attribution

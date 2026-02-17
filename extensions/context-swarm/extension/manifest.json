@@ -12,8 +12,7 @@
   "permissions": [
     "tabs",
     "scripting",
-    "activeTab",
-    "clipboardWrite"
+    "activeTab"
   ],
   "optional_permissions": [
     "nativeMessaging"
