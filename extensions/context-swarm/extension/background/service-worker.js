@@ -157,17 +157,6 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 // Phase 2: Native messaging bridge integration
 
-async function requestNativeMessaging() {
-  try {
-    const granted = await browser.permissions.request({
-      permissions: ['nativeMessaging']
-    });
-    return granted;
-  } catch (e) {
-    return false;
-  }
-}
-
 async function pingBridge() {
   try {
     const response = await browser.runtime.sendNativeMessage(
@@ -182,16 +171,6 @@ async function pingBridge() {
 
 async function storeInZeroClaw(results, category, keyPrefix) {
   try {
-    const hasPermission = await browser.permissions.contains({
-      permissions: ['nativeMessaging']
-    });
-    if (!hasPermission) {
-      const granted = await requestNativeMessaging();
-      if (!granted) {
-        return { status: 'error', error: 'nativeMessaging permission denied' };
-      }
-    }
-
     const pages = results
       .filter(r => r.status === 'done')
       .map(r => ({

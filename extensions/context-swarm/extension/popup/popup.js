@@ -68,19 +68,13 @@ document.addEventListener('DOMContentLoaded', () => {
         ${tab.restricted ? '<span class="lock-icon"></span>' : ''}
       `;
 
-      // Click handler for toggling selection (on non-restricted tabs)
+      // Click handler delegates to checkbox change event to avoid double-toggle
       if (!tab.restricted) {
         tabItem.addEventListener('click', (e) => {
           if (e.target.type !== 'checkbox') {
             const checkbox = tabItem.querySelector('input[type="checkbox"]');
             checkbox.checked = !checkbox.checked;
-            if (checkbox.checked) {
-              selectedTabIds.add(tab.id);
-            } else {
-              selectedTabIds.delete(tab.id);
-            }
-            updateSelectedCount();
-            btnExtract.disabled = selectedTabIds.size === 0;
+            checkbox.dispatchEvent(new Event('change'));
           }
         });
       }
@@ -165,19 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Port message handler for progress updates
+  // Port message handler for progress updates only
   port.onMessage.addListener((msg) => {
-    if (msg.type === MSG.EXTRACTION_PROGRESS) {
-      if (msg.status === 'complete') {
-        showResults(msg.result.results, msg.result.bundle);
-        return;
-      }
-      if (msg.tabId) {
-        updateProgressItem(msg.tabId, msg.status, msg.result);
-        if (msg.status === TAB_STATUS.DONE || msg.status === TAB_STATUS.FAILED) {
-          completedTabs++;
-          updateProgressBar();
-        }
+    if (msg.type === MSG.EXTRACTION_PROGRESS && msg.tabId) {
+      updateProgressItem(msg.tabId, msg.status, msg.result);
+      if (msg.status === TAB_STATUS.DONE || msg.status === TAB_STATUS.FAILED) {
+        completedTabs++;
+        updateProgressBar();
       }
     }
   });
@@ -301,6 +289,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnStoreZeroclaw) {
     btnStoreZeroclaw.addEventListener('click', async () => {
+      // Request nativeMessaging permission in user-gesture context (MV3 requirement)
+      const hasPermission = await browser.permissions.contains({
+        permissions: ['nativeMessaging']
+      });
+      if (!hasPermission) {
+        const granted = await browser.permissions.request({
+          permissions: ['nativeMessaging']
+        });
+        if (!granted) {
+          zeroclawFeedback.textContent = 'nativeMessaging permission denied';
+          zeroclawFeedback.style.color = '#ef4444';
+          zeroclawFeedback.classList.remove('hidden');
+          setTimeout(() => zeroclawFeedback.classList.add('hidden'), 4000);
+          return;
+        }
+      }
+
       btnStoreZeroclaw.disabled = true;
       btnStoreZeroclaw.textContent = 'Storing...';
       zeroclawFeedback.classList.add('hidden');
